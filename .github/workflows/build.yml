@@ -17,7 +17,7 @@ jobs:
       - name: Adding API key
         env:
           TMDB_API_KEY: ${{secrets.TMDB_API_KEY}}
-        run: echo "${TMDB_API_KEY};" >> config.js
+        run: echo "${TMDB_API_KEY};" >> ./src/config.js
 
       - name: Build Docker image
         run: |
