@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Killer searcher</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside id="results-float" class="results-float is-hidden" aria-live="polite" aria-label="Résultats de recherche">
+    <div class="results-header">
+      <strong>Résultats</strong>
+      <button id="results-close" type="button" title="Masquer" aria-label="Masquer les résultats">✕</button>
+    </div>
+    <div id="results-list" class="results-list"></div>
+  </aside>
+
+  <div class="container">
+    <h1>Killer searcher</h1>
+    <p class="lead">Tous les critères sont optionnels.</p>
+
+    <form id="search-form" autocomplete="off">
+      <fieldset>
+        <legend>Paramètres généraux</legend>
+        <div class="grid two">
+          <div class="form-row">
+            <label for="with_origin_country">Pays</label>
+            <input id="with_origin_country" name="with_origin_country" type="text" placeholder="ex: US" inputmode="verbatim" />
+            <div class="help">Exemples : <code>US</code>, <code>FR</code>.</div>
+          </div>
+        </div>
+
+        <div class="grid three mt-8">
+          <div class="form-row">
+            <label for="primary_release_year">Année de sortie</label>
+            <input id="primary_release_year" name="primary_release_year" type="number" min="1878" max="2100" placeholder="ex: 2010" />
+          </div>
+          <div class="form-row">
+            <label for="primary_release_date_gte">Année de sortie min</label>
+            <input id="primary_release_date_gte" name="primary_release_date.gte" type="number" min="1878" max="2100" placeholder="ex: 2010" />
+          </div>
+          <div class="form-row">
+            <label for="primary_release_date_lte">Année de sortie max</label>
+            <input id="primary_release_date_lte" name="primary_release_date.lte" type="number" min="1878" max="2100" placeholder="ex: 2010" />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Durée (en minutes)</legend>
+        <div class="grid two">
+          <div class="form-row">
+            <label for="runtime_gte">Durée minimale</label>
+            <input id="runtime_gte" name="with_runtime.gte" type="number" min="0" step="1" placeholder="ex: 120 (2 h)" />
+          </div>
+          <div class="form-row">
+            <label for="runtime_lte">Durée maximale</label>
+            <input id="runtime_lte" name="with_runtime.lte" type="number" min="0" step="1" placeholder="ex: 180 (3 h)" />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Acteurs & compagnies</legend>
+        <div class="form-row">
+          <label for="cast-input">Acteurs – autocomplétion multi</label>
+          <div class="chips-input" id="cast" data-name="with_cast">
+            <input id="cast-input" type="text" placeholder="Rechercher un acteur…" aria-autocomplete="list" aria-expanded="false" aria-controls="cast-suggestions" />
+            <ul id="cast-suggestions" class="suggestions" role="listbox" aria-label="Suggestions acteurs"></ul>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="companies-input">Compagnies – autocomplétion multi</label>
+          <div class="chips-input" id="companies" data-name="with_companies">
+            <input id="companies-input" type="text" placeholder="Rechercher une compagnie…" aria-autocomplete="list" aria-expanded="false" aria-controls="companies-suggestions" />
+            <ul id="companies-suggestions" class="suggestions" role="listbox" aria-label="Suggestions compagnies"></ul>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Genres</legend>
+        <div class="checkbox-grid" id="genres" aria-live="polite">
+          <div class="help" style="grid-column: 1/-1;">Chargement des genres…</div>
+        </div>
+        <div class="help">Vous pouvez cocher plusieurs genres.</div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="reset" class="ghost">Réinitialiser</button>
+        <button type="submit" class="primary">Rechercher</button>
+      </div>
+
+      <div class="mt-14">
+        <label class="help" for="preview">Prévisualisation de la requête</label>
+        <div id="preview" class="preview" aria-live="polite">(vide)</div>
+      </div>
+    </form>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
