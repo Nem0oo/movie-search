@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      -name: Adding API key
+      - name: Adding API key
         run: |
           echo ${{secrets.TMDB_API_KEY}} >> config.js
 
