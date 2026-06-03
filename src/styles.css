@@ -131,10 +131,31 @@ input:focus, select:focus, textarea:focus {
 .suggestions li:hover { background: rgba(58,160,255,.12); }
 .s-id { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; }
 
-.checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
-@media (min-width: 720px) { .checkbox-grid { grid-template-columns: repeat(3, 1fr); } }
-.checkbox { display: flex; align-items: center; gap: 8px; }
-.checkbox input { accent-color: var(--accent); }
+.genre-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.genre-toggle {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--chip);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  user-select: none;
+}
+.genre-toggle:hover { border-color: var(--accent); color: var(--text); }
+.genre-toggle[data-state="include"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.genre-toggle[data-state="exclude"] {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
 
 .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
 button {

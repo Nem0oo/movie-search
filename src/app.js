@@ -27,8 +27,10 @@ function serializeForm(form) {
     data.delete('primary_release_date.lte');
   }
 
-  const genres = qsa('input[name="with_genres"]:checked', form).map(cb => cb.value).filter(Boolean);
-  if (genres.length) data.set('with_genres', genres.join(','));
+  const includedGenres = qsa('.genre-toggle[data-state="include"]', form).map(btn => btn.dataset.genreId);
+  const excludedGenres = qsa('.genre-toggle[data-state="exclude"]', form).map(btn => btn.dataset.genreId);
+  if (includedGenres.length) data.set('with_genres', includedGenres.join(','));
+  if (excludedGenres.length) data.set('without_genres', excludedGenres.join(','));
 
   for (const key of ['with_cast', 'with_companies']) {
     const cont = qs(`.chips-input[data-name="${key}"]`, form);
@@ -137,10 +139,23 @@ async function loadGenres() {
       return;
     }
     list.forEach(g => {
-      const label = document.createElement('label');
-      label.className = 'checkbox';
-      label.innerHTML = `<input type="checkbox" name="with_genres" value="${escHtml(g.id)}" /> ${escHtml(g.name)}`;
-      container.appendChild(label);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'genre-toggle';
+      btn.dataset.genreId = String(g.id);
+      btn.dataset.name = g.name;
+      btn.dataset.state = 'neutral';
+      btn.textContent = g.name;
+      btn.addEventListener('click', () => {
+        const states = ['neutral', 'include', 'exclude'];
+        const next = states[(states.indexOf(btn.dataset.state) + 1) % states.length];
+        btn.dataset.state = next;
+        const prefixes = { neutral: '', include: '+ ', exclude: '− ' };
+        btn.textContent = prefixes[next] + btn.dataset.name;
+        updatePreview();
+        autoSubmit();
+      });
+      container.appendChild(btn);
     });
   } catch (err) {
     container.innerHTML = `<div class="help" style="grid-column:1/-1;color:#ffb3b3;">Erreur de chargement des genres : ${err.message}</div>`;
@@ -287,15 +302,15 @@ document.getElementById('results-close').addEventListener('click', () => {
   qs('#results-list').innerHTML = '';
 });
 
-document.getElementById('genres').addEventListener('change', (e) => {
-  if (e.target && e.target.name === 'with_genres') {
-    updatePreview();
-    autoSubmit();
-  }
-});
 form.addEventListener('input', updatePreview);
 form.addEventListener('reset', () => {
-  setTimeout(updatePreview, 0);
+  setTimeout(() => {
+    qsa('.genre-toggle').forEach(btn => {
+      btn.dataset.state = 'neutral';
+      btn.textContent = btn.dataset.name;
+    });
+    updatePreview();
+  }, 0);
   qs('#results-float').classList.add('is-hidden');
   qs('#results-list').innerHTML = '';
 });
