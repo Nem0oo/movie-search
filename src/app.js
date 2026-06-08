@@ -128,7 +128,7 @@ function initChipsInput(containerId, { fetchSuggestions }) {
 async function loadGenres() {
   const container = qs('#genres');
   try {
-    const url = `${BASE_URL}/genre/movie/list?api_key=${encodeURIComponent(TMDB_API_KEY)}`;
+    const url = `${BASE_URL}/genre/movie/list?api_key=${encodeURIComponent(TMDB_API_KEY)}&language=fr-FR`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
@@ -263,7 +263,7 @@ async function runSearchFloat() {
   if (!params.has('sort_by')) params.set('sort_by', 'popularity.desc');
   params.set('page', '1');
 
-  const url = `${BASE_URL}/discover/movie?api_key=${encodeURIComponent(TMDB_API_KEY)}&${params.toString()}`;
+  const url = `${BASE_URL}/discover/movie?api_key=${encodeURIComponent(TMDB_API_KEY)}&language=fr-FR&${params.toString()}`;
   qs('#preview').textContent = url;
 
   const panel = qs('#results-float');
