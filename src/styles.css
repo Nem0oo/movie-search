@@ -132,6 +132,8 @@ input:focus, select:focus, textarea:focus {
 .s-id { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; }
 
 .genre-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.genre-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; flex-wrap: wrap; gap: 8px; }
+button.small { padding: 6px 12px; font-size: 12px; font-weight: 500; }
 
 .genre-toggle {
   padding: 6px 14px;
