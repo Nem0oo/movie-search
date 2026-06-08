@@ -319,5 +319,14 @@ form.addEventListener('submit', async (e) => {
   await runSearchFloat();
 });
 
+document.getElementById('reject-unselected').addEventListener('click', () => {
+  qsa('.genre-toggle[data-state="neutral"]').forEach(btn => {
+    btn.dataset.state = 'exclude';
+    btn.textContent = '− ' + btn.dataset.name;
+  });
+  updatePreview();
+  autoSubmit();
+});
+
 loadGenres();
 updatePreview();
