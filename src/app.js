@@ -283,8 +283,8 @@ async function runSearchFloat() {
   }
 }
 
-const castChips = initChipsInput('cast', { fetchSuggestions: tmdbPeopleSuggestions });
-const compChips = initChipsInput('companies', { fetchSuggestions: tmdbCompanySuggestions });
+initChipsInput('cast', { fetchSuggestions: tmdbPeopleSuggestions });
+initChipsInput('companies', { fetchSuggestions: tmdbCompanySuggestions });
 
 const form = document.getElementById('search-form');
 
