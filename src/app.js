@@ -158,7 +158,7 @@ async function loadGenres() {
       container.appendChild(btn);
     });
   } catch (err) {
-    container.innerHTML = `<div class="help" style="grid-column:1/-1;color:#ffb3b3;">Erreur de chargement des genres : ${err.message}</div>`;
+    container.innerHTML = `<div class="help" style="grid-column:1/-1;color:#ffb3b3;">Erreur de chargement des genres : ${escHtml(err.message)}</div>`;
   }
 }
 
@@ -279,7 +279,7 @@ async function runSearchFloat() {
     list.innerHTML = results.length ? '' : '<div class="help">Aucun film trouvé.</div>';
     results.forEach(m => list.appendChild(createMovieItem(m)));
   } catch (err) {
-    list.innerHTML = `<div class="help" style="color:#ffb3b3;">Erreur : ${err.message}</div>`;
+    list.innerHTML = `<div class="help" style="color:#ffb3b3;">Erreur : ${escHtml(err.message)}</div>`;
   }
 }
 
