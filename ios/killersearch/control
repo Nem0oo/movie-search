@@ -1,0 +1,9 @@
+Package: com.nem0oo.killersearch
+Name: Killer Search
+Version: 0.1.0
+Architecture: iphoneos-arm
+Description: Assistant de recherche TMDB pour le jeu 1jour1film.fr
+Maintainer: nem0oo
+Author: nem0oo
+Section: Utilities
+Depends: firmware (>= 16.0)
