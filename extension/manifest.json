@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Killer Search — 1jour1film Assistant",
+  "version": "0.1.0",
+  "description": "Recherche TMDB (filtres avancés) avec envoi automatique des propositions vers 1jour1film.fr et affichage du résultat de comparaison.",
+  "permissions": ["storage", "sidePanel", "tabs"],
+  "host_permissions": [
+    "https://api.themoviedb.org/*",
+    "https://image.tmdb.org/*",
+    "https://1jour1film.fr/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "action": {},
+  "content_scripts": [
+    {
+      "matches": ["https://1jour1film.fr/*"],
+      "js": ["injected.js"],
+      "world": "MAIN",
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://1jour1film.fr/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
+}
