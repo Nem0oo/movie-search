@@ -6,6 +6,7 @@ let gameWon = null;
 let searchSeq = 0;
 const genreNameToId = new Map();
 const personIdCache = new Map();
+const templateCache = new Map();
 const companyIdCache = new Map();
 
 const qs = (sel, el = document) => el.querySelector(sel);
@@ -286,12 +287,13 @@ async function buildDiscoverParams(mc) {
 }
 
 async function fetchMovieTemplate(id) {
+  if (templateCache.has(id)) return templateCache.get(id);
   try {
     const url = `${BASE_URL}/movie/${id}?api_key=${encodeURIComponent(TMDB_API_KEY)}&language=fr-FR&append_to_response=credits`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    return {
+    const template = {
       cast: ((data.credits && data.credits.cast) || []).length,
       crew: ((data.credits && data.credits.crew) || []).filter(c => c.job === 'Director').length,
       genres: (data.genres || []).length,
@@ -299,6 +301,8 @@ async function fetchMovieTemplate(id) {
       languages: (data.spoken_languages || []).length,
       companies: (data.production_companies || []).length,
     };
+    templateCache.set(id, template);
+    return template;
   } catch {
     return null;
   }
@@ -357,10 +361,10 @@ function renderGuessResult(container, data) {
   }
 
   if (c.year && c.year.comparison && c.year.comparison !== 'none') {
-    parts.push(`<div>Année : ${escHtml(c.year.value ?? '?')} (cible ${COMPARISON_LABEL[c.year.comparison] || c.year.comparison})</div>`);
+    parts.push(`<div>Année : ${escHtml(c.year.value ?? '?')} (cible ${escHtml(COMPARISON_LABEL[c.year.comparison] || c.year.comparison)})</div>`);
   }
   if (c.runtime && c.runtime.comparison && c.runtime.comparison !== 'none') {
-    parts.push(`<div>Durée : ${escHtml(c.runtime.value ?? '?')} min (cible ${COMPARISON_LABEL[c.runtime.comparison] || c.runtime.comparison})</div>`);
+    parts.push(`<div>Durée : ${escHtml(c.runtime.value ?? '?')} min (cible ${escHtml(COMPARISON_LABEL[c.runtime.comparison] || c.runtime.comparison)})</div>`);
   }
 
   if (!parts.length) parts.push('<div class="pending">Aucune correspondance.</div>');
@@ -374,16 +378,19 @@ async function submitGuess(movie, resultEl) {
 
   const tab = await findGameTab();
   if (!tab) {
+    guessedIds.delete(movie.id);
     resultEl.innerHTML = '<div class="error">Aucun onglet 1jour1film.fr ouvert.</div>';
     return;
   }
 
   chrome.tabs.sendMessage(tab.id, { type: 'KS_DO_SUBMIT', externalId: String(movie.id) }, (response) => {
     if (chrome.runtime.lastError) {
+      guessedIds.delete(movie.id);
       resultEl.innerHTML = `<div class="error">${escHtml(chrome.runtime.lastError.message)}</div>`;
       return;
     }
     if (!response || !response.ok) {
+      guessedIds.delete(movie.id);
       resultEl.innerHTML = `<div class="error">${escHtml((response && response.error) || "Échec de l'envoi.")}</div>`;
       return;
     }

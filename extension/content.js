@@ -6,6 +6,7 @@ let currentMmuid = null;
 const PATH_ID_RE = /\/(history|challenge)\/([a-zA-Z0-9]{15,40})(?:[/?#]|$)/;
 const pathMatch = window.location.pathname.match(PATH_ID_RE);
 let currentGameId = pathMatch ? pathMatch[2] : null;
+const GAME_ID_RE = /^[a-zA-Z0-9_-]{1,64}$/;
 const isDailyPage = !pathMatch; // heuristique : ni /history/ ni /challenge/
 
 async function bootstrapTodayId() {
@@ -21,7 +22,10 @@ async function bootstrapTodayId() {
 
 window.addEventListener('killer-search:update', (event) => {
   const detail = event.detail || {};
-  if (detail.id) currentGameId = detail.id;
+  // L'événement vient du monde MAIN (modifiable par la page) : on n'accepte
+  // qu'un id qui ne peut pas altérer le chemin des requêtes qu'on construit.
+  if (typeof detail.id !== 'string' || !GAME_ID_RE.test(detail.id)) return;
+  currentGameId = detail.id;
   chrome.runtime.sendMessage({ type: 'KS_GAME_UPDATE', ...detail }).catch(() => {});
 });
 
